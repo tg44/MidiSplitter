@@ -51,7 +51,7 @@ public class OutputWriter {
                     endmsg.setMessage(endmsg.getCommand(), chanels, endmsg.getData1(), endmsg.getData2());
                     track.add(mn.getEndMsg());
                 }
-                //chanels++;
+                chanels++;
             }
             tracks++;
         }
