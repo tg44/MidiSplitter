@@ -47,7 +47,7 @@ public class MidiSplitter {
                     }
                     if (args[1].contains("-pr")) {
                         String outFName = f.getParentFile().getAbsolutePath();
-                        outFName += args[2]+f.getName();
+                        outFName += args[2]+"\\"+f.getName();
                         runon.put(f.getAbsolutePath(), outFName);
                         
                     }
