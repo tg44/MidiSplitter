@@ -7,6 +7,10 @@ package midisplitter;
 import java.awt.Component;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequence;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
@@ -19,18 +23,34 @@ public class ConfigPanel extends javax.swing.JPanel {
     /**
      * Creates new form ConfigPanel
      */
-    public ConfigPanel(File f,String out) {
+    public ConfigPanel(File f, String out) {
         initComponents();
-        file=f;
+        file = f;
         initDinamicComponents(out);
     }
     File file;
-    ArrayList<JCheckBox> channelArr;
-    public String getOutFileName(){
+    ArrayList<JCheckBox> channelArr = new ArrayList<JCheckBox>();
+
+    public String getOutFileName() {
         return outFileNameField.getText();
     }
-    public Boolean isGlobal(){
+
+    public Boolean isGlobal() {
         return globalEnabled.isSelected();
+    }
+
+    public Boolean[] getBooleanArray() {
+        Boolean[] channels = new Boolean[16];
+        for (int i = 0; i < channels.length; i++) {
+            channels[i] = true;
+        }
+        for (JCheckBox chkBox : channelArr) {
+            if (!chkBox.isSelected()) {
+                String tmp = chkBox.getText().replaceAll("[^\\d.]", "");
+                channels[Integer.valueOf(tmp)-1] = false;
+            }
+        }
+        return channels;
     }
 
     /**
@@ -46,6 +66,11 @@ public class ConfigPanel extends javax.swing.JPanel {
         notGlobalPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         outFileNameField = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        chkBoxPanel = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         globalEnabled.setSelected(true);
         globalEnabled.setLabel("Use global config");
@@ -61,15 +86,35 @@ public class ConfigPanel extends javax.swing.JPanel {
 
         outFileNameField.setText("jTextField1");
 
+        jLabel2.setText("jLabel2");
+
+        jLabel3.setText("jLabel3");
+
+        jLabel4.setText("jLabel4");
+
+        jLabel5.setText("jLabel5");
+
         javax.swing.GroupLayout notGlobalPanelLayout = new javax.swing.GroupLayout(notGlobalPanel);
         notGlobalPanel.setLayout(notGlobalPanelLayout);
         notGlobalPanelLayout.setHorizontalGroup(
             notGlobalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(notGlobalPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(outFileNameField, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                .addGroup(notGlobalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chkBoxPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(notGlobalPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(outFileNameField))
+                    .addGroup(notGlobalPanelLayout.createSequentialGroup()
+                        .addGroup(notGlobalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4))
+                        .addGap(103, 103, 103)
+                        .addGroup(notGlobalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel3))
+                        .addGap(0, 198, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         notGlobalPanelLayout.setVerticalGroup(
@@ -79,7 +124,17 @@ public class ConfigPanel extends javax.swing.JPanel {
                 .addGroup(notGlobalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(outFileNameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(210, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(notGlobalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(notGlobalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
+                .addComponent(chkBoxPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -109,25 +164,111 @@ public class ConfigPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void globalOrNot(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_globalOrNot
-       for(Component c:notGlobalPanel.getComponents()){
-           if(globalEnabled.isSelected()){
-               c.setEnabled(false);
-           }else{
-              c.setEnabled(true); 
-           }
-       }
+        for (Component c : notGlobalPanel.getComponents()) {
+            if (globalEnabled.isSelected()) {
+                c.setEnabled(false);
+            } else {
+                c.setEnabled(true);
+            }
+        }
+        for (Component c : chkBoxPanel.getComponents()) {
+            if (globalEnabled.isSelected()) {
+                c.setEnabled(false);
+            } else {
+                c.setEnabled(true);
+            }
+        }
     }//GEN-LAST:event_globalOrNot
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel chkBoxPanel;
     private javax.swing.JCheckBox globalEnabled;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel notGlobalPanel;
     private javax.swing.JTextField outFileNameField;
     // End of variables declaration//GEN-END:variables
 
     private void initDinamicComponents(String outFileName) {
         outFileNameField.setText(outFileName);
-        
+        try {
+            Sequence sequence = MidiSystem.getSequence(file);
+            Splitter sp = new Splitter();
+            sp.splitit(sequence);
+            int tracknum = sp.getSeparatedNotes().size();
+            jLabel2.setText("OriginalTrackNum: " + tracknum);
+            Boolean[] channels = new Boolean[16];
+            for (int i = 0; i < channels.length; i++) {
+                channels[i] = false;
+            }
+            for (Map.Entry<String, HashMap<String, ArrayList<MidiNote>>> entry : sp.getSeparatedNotes().entrySet()) {
+                for (String ch : entry.getValue().keySet()) {
+                    String tmp = ch.replaceAll("[^\\d.]", "");
+                    channels[Integer.valueOf(tmp)] = true;
+                }
+            }
+            String channelsstr = "";
+            for (int i = 0; i < channels.length; i++) {
+                if (channels[i]) {
+                    channelsstr += (i + 1) + " ";
+                    JCheckBox chkbox = new JCheckBox("Ch" + (i + 1));
+                    chkbox.setSelected(true);
+                    chkBoxPanel.add(chkbox);
+                    channelArr.add(chkbox);
+                }
+            }
+            jLabel3.setText("OriginalChannels: " + channelsstr);
+
+            ReOrganizer reo = new ReOrganizer(sp);
+            int chnum = reo.firstComeFirstServe(channels);
+            jLabel5.setText("AllSplit channel num: " + chnum);
+            jLabel4.setText("SplitedTrackNum: " + reo.organizedNotes.size());
+
+        } catch (Exception e) {
+            //System.out.println(e.getMessage());
+            //System.out.println(e.getLocalizedMessage());
+            e.printStackTrace();
+        }
+
         globalOrNot(null);
+    }
+
+    private void changedChannelChackBox(javax.swing.event.ChangeEvent evt) {
+        try {
+            Sequence sequence = MidiSystem.getSequence(file);
+            Splitter sp = new Splitter();
+            sp.splitit(sequence);
+            int tracknum = sp.getSeparatedNotes().size();
+            jLabel2.setText("OriginalTrackNum: " + tracknum);
+            Boolean[] channels = new Boolean[16];
+            for (int i = 0; i < channels.length; i++) {
+                channels[i] = false;
+            }
+            for (Map.Entry<String, HashMap<String, ArrayList<MidiNote>>> entry : sp.getSeparatedNotes().entrySet()) {
+                for (String ch : entry.getValue().keySet()) {
+                    String tmp = ch.replaceAll("[^\\d.]", "");
+                    channels[Integer.valueOf(tmp)] = true;
+                }
+            }
+            String channelsstr = "";
+            for (int i = 0; i < channels.length; i++) {
+                if (channels[i]) {
+                    channelsstr += (i + 1) + " ";
+                }
+            }
+            jLabel3.setText("OriginalChannels: " + channelsstr);
+
+            ReOrganizer reo = new ReOrganizer(sp);
+            int chnum = reo.firstComeFirstServe(channels);
+            jLabel5.setText("AllSplit channel num: " + chnum);
+            jLabel4.setText("SplitedTrackNum: " + reo.organizedNotes.size());
+
+        } catch (Exception e) {
+            //System.out.println(e.getMessage());
+            //System.out.println(e.getLocalizedMessage());
+            e.printStackTrace();
+        }
     }
 }

@@ -9,8 +9,7 @@ In the source you have possibilitis to resolve the track and channel grouping an
 
 
 
-If input like:
-
+	If input like:
 	Track1:
 	ch1:
 	|---A---|

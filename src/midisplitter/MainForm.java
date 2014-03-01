@@ -51,6 +51,8 @@ public class MainForm extends javax.swing.JPanel {
         preprocessButton = new javax.swing.JButton();
         processButton = new javax.swing.JButton();
 
+        setPreferredSize(new java.awt.Dimension(1024, 768));
+
         chooseFileButton.setText("ChooseFile");
         chooseFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -114,11 +116,11 @@ public class MainForm extends javax.swing.JPanel {
         configAll.setLayout(configAllLayout);
         configAllLayout.setHorizontalGroup(
             configAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 749, Short.MAX_VALUE)
+            .addGap(0, 1076, Short.MAX_VALUE)
         );
         configAllLayout.setVerticalGroup(
             configAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 283, Short.MAX_VALUE)
+            .addGap(0, 397, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Config all", configAll);
@@ -229,40 +231,47 @@ public class MainForm extends javax.swing.JPanel {
         process();
     }//GEN-LAST:event_processEvent
 
-    private void process(){
-        try{
-        for (Map.Entry<String, ConfigPanel> entry : runon.entrySet()) {
-            Splitter sp = new Splitter();
-            Sequence sequence = MidiSystem.getSequence(new File(entry.getKey()));
-            sp.splitit(sequence);
-            ReOrganizer reo = new ReOrganizer(sp);
-
-            int chnum = reo.firstComeFirstServe();
-            if (chnum > 16) {
-                throw new Exception("too much chennel: " + chnum);
+    private void process() {
+        try {
+            for (Map.Entry<String, ConfigPanel> entry : runon.entrySet()) {
+                Splitter sp = new Splitter();
+                Sequence sequence = MidiSystem.getSequence(new File(entry.getKey()));
+                sp.splitit(sequence);
+                ReOrganizer reo = new ReOrganizer(sp);
+                if (!entry.getValue().isGlobal()) {
+                    int chnum = reo.firstComeFirstServe(entry.getValue().getBooleanArray());
+                    if (chnum > 16) {
+                        throw new Exception("too much chennel: " + chnum);
+                    }
+                    Sequence oseq = new Sequence(sequence.getDivisionType(), sequence.getResolution());
+                    OutputWriter opw = new OutputWriter();
+                    opw.write(oseq, reo);
+                    int[] allowedTypes = MidiSystem.getMidiFileTypes(oseq);
+                    MidiSystem.write(oseq, allowedTypes[0], new File(entry.getValue().getOutFileName()));
+                } else {
+                    int chnum = reo.firstComeFirstServe();
+                    if (chnum > 16) {
+                        throw new Exception("too much chennel: " + chnum);
+                    }
+                    Sequence oseq = new Sequence(sequence.getDivisionType(), sequence.getResolution());
+                    OutputWriter opw = new OutputWriter();
+                    opw.write(oseq, reo);
+                    int[] allowedTypes = MidiSystem.getMidiFileTypes(oseq);
+                    File tmpFile = new File(entry.getKey());
+                    String outFName = tmpFile.getName();
+                    outFName = outFName.replace(".mid", postfixField.getText() + ".mid");
+                    String outPFName = tmpFile.getParentFile().getAbsolutePath();
+                    outFName = outPFName + "\\" + prefixField.getText() + outFName;
+                    MidiSystem.write(oseq, allowedTypes[0], new File(outFName));
+                }
             }
-            Sequence oseq = new Sequence(sequence.getDivisionType(), sequence.getResolution());
-            OutputWriter opw = new OutputWriter();
-            opw.write(oseq, reo);
-            int[] allowedTypes = MidiSystem.getMidiFileTypes(oseq);
-            if(!entry.getValue().isGlobal()){
-                MidiSystem.write(oseq, allowedTypes[0], new File(entry.getValue().getOutFileName()));
-            }else{
-                File tmpFile = new File(entry.getKey());
-                String outFName = tmpFile.getName();
-                outFName = outFName.replace(".mid", postfixField.getText() + ".mid");
-                String outPFName = tmpFile.getParentFile().getAbsolutePath();
-                outFName = outPFName + "\\" + prefixField.getText() + outFName;
-                MidiSystem.write(oseq, allowedTypes[0], new File(outFName));
-            }
-            //System.out.println("--------------------------------");
-            //t.test("d:\\pirates_out.mid");
-        }
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println(e.getStackTrace());
+            e.printStackTrace();
         }
     }
+
     private void preprocess() {
         chooseFileButton.setEnabled(false);
         for (Map.Entry<String, ConfigPanel> me : runon.entrySet()) {
@@ -292,8 +301,9 @@ public class MainForm extends javax.swing.JPanel {
                         JOptionPane.YES_NO_OPTION);
                 int midifilenum = processDirs(n == JOptionPane.YES_OPTION, selectedFile);
                 choosedFileLabel.setText("\"" + selectedFile.getAbsolutePath() + "\"" + " number of midis: " + midifilenum);
-                if(midifilenum>0)
+                if (midifilenum > 0) {
                     preprocessButton.setEnabled(true);
+                }
             } else {
                 if (selectedFile.getAbsolutePath().endsWith(".mid")) {
                     runon.put(selectedFile.getAbsolutePath(), null);
