@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
+import javax.swing.JFrame;
 
 /**
  *
@@ -21,12 +22,24 @@ public class MidiSplitter {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
+        JFrame frame=new JFrame("MidiSplitter");
+        MainForm mainWindow = new MainForm();
+        frame.add(mainWindow);
+        frame.setSize(mainWindow.getPreferredSize());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+        //mainWindow.(true);
         if (args.length < 2) {
             System.out.println("Correct usage:");
             System.out.println("    MidiSplitter input.mid output.mid");
             System.out.println("    MidiSplitter inputdir -po postfix [-r]");
             System.out.println("    MidiSplitter inputdir -pr prefix [-r]");
+            return;
         }
+        
+        
+        //////////OLD CODE//////////////////////////
+        /*
         HashMap<String, String> runon = new HashMap<String, String>();
         //Tester t=new Tester();
         //t.test("d:\\pirates.mid");
@@ -76,6 +89,8 @@ public class MidiSplitter {
             //System.out.println("--------------------------------");
             //t.test("d:\\pirates_out.mid");
         }
+        * 
+        */
     }
 
 }
