@@ -21,7 +21,7 @@ import javax.sound.midi.Track;
 import static midisplitter.Tester.NOTE_NAMES;
 import static midisplitter.Tester.NOTE_OFF;
 import static midisplitter.Tester.NOTE_ON;
-
+import static midisplitter.Tester.NOTE_PITCH;
 /**
  *
  * @author Törcsi
@@ -65,6 +65,16 @@ public class Splitter {
                                 ShortMessage stm=(ShortMessage) mn.getStartMsg().getMessage();
                                 if (stm.getData1() == sm.getData1()) {
                                     mn.setEndMsg(event);
+                                }
+                            }
+                        }
+                    }else if (sm.getCommand() == NOTE_PITCH) {
+                        //find the startpair
+                        for (MidiNote mn : channelNoteList) {
+                            if (mn.getEndMsg() == null) {
+                                ShortMessage stm=(ShortMessage) mn.getStartMsg().getMessage();
+                                if (stm.getData1() == sm.getData1()) {
+                                    mn.pitch.add(event);
                                 }
                             }
                         }

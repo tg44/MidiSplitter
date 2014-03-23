@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -50,6 +51,8 @@ public class MainForm extends javax.swing.JPanel {
         configAll = new javax.swing.JPanel();
         preprocessButton = new javax.swing.JButton();
         processButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        errorList = new javax.swing.JList();
 
         setPreferredSize(new java.awt.Dimension(1024, 768));
 
@@ -120,7 +123,7 @@ public class MainForm extends javax.swing.JPanel {
         );
         configAllLayout.setVerticalGroup(
             configAllLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 397, Short.MAX_VALUE)
+            .addGap(0, 552, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Config all", configAll);
@@ -141,6 +144,10 @@ public class MainForm extends javax.swing.JPanel {
             }
         });
 
+        errorList.setModel(new DefaultListModel());
+        errorList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(errorList);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -148,9 +155,13 @@ public class MainForm extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(preprocessButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(processButton))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(chooseFileButton)
@@ -159,39 +170,41 @@ public class MainForm extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
-                                    .addComponent(choosedFileLabel)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(postfixField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(53, 53, 53)
-                                        .addComponent(prepostLabel))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(preprocessButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(processButton)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                        .addComponent(prepostLabel))
+                                    .addComponent(choosedFileLabel))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(29, 29, 29))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chooseFileButton)
-                    .addComponent(choosedFileLabel))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(chooseFileButton)
+                            .addComponent(choosedFileLabel))
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(prefixField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(postfixField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(prepostLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(preprocessButton)
+                            .addComponent(processButton)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(prefixField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(postfixField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(prepostLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(preprocessButton)
-                    .addComponent(processButton))
-                .addGap(17, 17, 17)
                 .addComponent(jTabbedPane1)
                 .addGap(31, 31, 31))
         );
@@ -241,17 +254,22 @@ public class MainForm extends javax.swing.JPanel {
                 if (!entry.getValue().isGlobal()) {
                     int chnum = reo.firstComeFirstServe(entry.getValue().getBooleanArray());
                     if (chnum > 16) {
-                        throw new Exception("too much chennel: " + chnum);
+                        ((DefaultListModel<String>)errorList.getModel()).addElement(entry.getValue().getOutFileName()+" not converted too much chennel");
+                        continue;
                     }
                     Sequence oseq = new Sequence(sequence.getDivisionType(), sequence.getResolution());
                     OutputWriter opw = new OutputWriter();
                     opw.write(oseq, reo);
                     int[] allowedTypes = MidiSystem.getMidiFileTypes(oseq);
+                    File tmpf=new File(entry.getValue().getOutFileName());
+                    tmpf=tmpf.getParentFile();
+                    tmpf.mkdirs();
                     MidiSystem.write(oseq, allowedTypes[0], new File(entry.getValue().getOutFileName()));
                 } else {
                     int chnum = reo.firstComeFirstServe();
                     if (chnum > 16) {
-                        throw new Exception("too much chennel: " + chnum);
+                        ((DefaultListModel<String>)errorList.getModel()).addElement(entry.getValue().getOutFileName()+" not converted too much chennel");
+                        continue;
                     }
                     Sequence oseq = new Sequence(sequence.getDivisionType(), sequence.getResolution());
                     OutputWriter opw = new OutputWriter();
@@ -262,6 +280,9 @@ public class MainForm extends javax.swing.JPanel {
                     outFName = outFName.replace(".mid", postfixField.getText() + ".mid");
                     String outPFName = tmpFile.getParentFile().getAbsolutePath();
                     outFName = outPFName + "\\" + prefixField.getText() + outFName;
+                    File tmpf=new File(outFName);
+                    tmpf=tmpf.getParentFile();
+                    tmpf.mkdirs();
                     MidiSystem.write(oseq, allowedTypes[0], new File(outFName));
                 }
             }
@@ -338,8 +359,10 @@ public class MainForm extends javax.swing.JPanel {
     private javax.swing.JButton chooseFileButton;
     private javax.swing.JLabel choosedFileLabel;
     private javax.swing.JPanel configAll;
+    private javax.swing.JList errorList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField postfixField;
     private javax.swing.JTextField prefixField;

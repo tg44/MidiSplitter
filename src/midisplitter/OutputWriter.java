@@ -44,9 +44,17 @@ public class OutputWriter {
                 ArrayList<MidiNote> list = entry.getValue();
                 //ArrayList<MidiEvent> meList=new ArrayList<MidiEvent>();
                 for (MidiNote mn : list) {
+                    //start
                     ShortMessage stmsg = ((ShortMessage) mn.getStartMsg().getMessage());
                     stmsg.setMessage(stmsg.getCommand(), chanels, stmsg.getData1(), stmsg.getData2());
                     track.add(mn.getStartMsg());
+                    //pitch
+                    for(MidiEvent pme : mn.pitch){
+                        ShortMessage pmsg=(ShortMessage)pme.getMessage();
+                        pmsg.setMessage(pmsg.getCommand(), chanels, pmsg.getData1(), pmsg.getData2());
+                        track.add(pme);
+                    }
+                    //stop
                     ShortMessage endmsg = ((ShortMessage) mn.getEndMsg().getMessage());
                     endmsg.setMessage(endmsg.getCommand(), chanels, endmsg.getData1(), endmsg.getData2());
                     track.add(mn.getEndMsg());

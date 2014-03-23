@@ -96,7 +96,7 @@ public class ReOrganizer {
         if (splittotracks) {
             int tracks = 1;
             for (ArrayList<MidiNote> chanellist : lists) {
-                if (splitch[tracks-1]) {
+                if (tracks <= 16 && splitch[tracks-1]) {
                     organizedNotes.put("t" + tracks, new HashMap<String, ArrayList<MidiNote>>());
                     organizedNotes.get("t" + tracks).put("ch" + (tracks - 1), chanellist);
                 }

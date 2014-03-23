@@ -5,6 +5,7 @@
  */
 package midisplitter;
 
+import java.util.ArrayList;
 import javax.sound.midi.MidiEvent;
 
 /**
@@ -14,6 +15,7 @@ import javax.sound.midi.MidiEvent;
 public class MidiNote {
 
     private MidiEvent startMsg;
+    public ArrayList<MidiEvent> pitch=new ArrayList<MidiEvent>();
     private MidiEvent endMsg;
 
     public Boolean isOn(long tick) {
