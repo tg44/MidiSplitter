@@ -8,6 +8,11 @@ Its split the chords. Need some further work for some more special functionality
 In the source you have possibilitis to resolve the track and channel grouping and made it fully to firste come first serve tracks.
 
 Changelog:
+* 2014.03.28
+  * [feture] the tempo copyed to the output and not modifyed to 120
+  * [bugfix] pitchs are fixed
+    * the code get hack and im not sure this is the referencial working
+
 * 2014.03.23
   * [bugfix] if the prefix is directory, now we creat it
   * [bugfix] no more too much chennel exception instead show them

@@ -21,6 +21,10 @@ public class ReOrganizer {
     Boolean keeptracks = true;
     Boolean keepchannels = true;
 
+    
+    public byte[] getTempo(){
+        return sp.getTempo();
+    }
     public void setSplittotracks(Boolean splittotracks) {
         this.splittotracks = splittotracks;
     }

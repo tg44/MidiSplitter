@@ -24,10 +24,17 @@ public class OutputWriter {
             Track track = sequence.createTrack();
             for (Map.Entry<String, ArrayList<MidiNote>> entry : entry2.getValue().entrySet()) {
                 //add some meta
-                MetaMessage mm=new MetaMessage();
-                byte[] data=(new String("Track"+tracks).getBytes());
+                MetaMessage mm = new MetaMessage();
+                byte[] data = (new String("Track" + tracks).getBytes());
                 mm.setMessage(3, data, data.length);
                 track.add(new MidiEvent(mm, 0));
+
+                //set tempo data
+                if (reOrganizer.getTempo() != null) {
+                    mm = new MetaMessage();
+                    mm.setMessage(0x51, reOrganizer.getTempo(), reOrganizer.getTempo().length);
+                    track.add(new MidiEvent(mm, 0));
+                }
                 //mm=new MetaMessage();
                 //data=(new String("Track"+tracks).getBytes());
                 //mm.setMessage(2*16+1, new byte[0], 0);
@@ -49,8 +56,8 @@ public class OutputWriter {
                     stmsg.setMessage(stmsg.getCommand(), chanels, stmsg.getData1(), stmsg.getData2());
                     track.add(mn.getStartMsg());
                     //pitch
-                    for(MidiEvent pme : mn.pitch){
-                        ShortMessage pmsg=(ShortMessage)pme.getMessage();
+                    for (MidiEvent pme : mn.pitch) {
+                        ShortMessage pmsg = (ShortMessage) pme.getMessage();
                         pmsg.setMessage(pmsg.getCommand(), chanels, pmsg.getData1(), pmsg.getData2());
                         track.add(pme);
                     }

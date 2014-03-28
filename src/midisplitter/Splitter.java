@@ -7,6 +7,7 @@ package midisplitter;
 
 import com.sun.media.sound.MidiUtils;
 import java.io.File;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,10 @@ import static midisplitter.Tester.NOTE_PITCH;
 public class Splitter {
 
     HashMap<String, HashMap<String, ArrayList<MidiNote>>> separatedNotes;
-
+    byte[] tempo=null;
+    public byte[] getTempo(){
+        return tempo;
+    }
     public HashMap<String, HashMap<String, ArrayList<MidiNote>>> getSeparatedNotes() {
         return separatedNotes;
     }
@@ -68,21 +72,29 @@ public class Splitter {
                                 }
                             }
                         }
-                    }else if (sm.getCommand() == NOTE_PITCH) {
+                    }else if (message.getStatus() > 223 && message.getStatus() < 240) {
                         //find the startpair
                         for (MidiNote mn : channelNoteList) {
                             if (mn.getEndMsg() == null) {
-                                ShortMessage stm=(ShortMessage) mn.getStartMsg().getMessage();
-                                if (stm.getData1() == sm.getData1()) {
+                                //ShortMessage stm=(ShortMessage) mn.getStartMsg().getMessage();
+                                if(message.getStatus() - 223==mn.getStartMsg().getMessage().getStatus() - 143)
                                     mn.pitch.add(event);
-                                }
+                                    /*if (stm.getData1() == sm.getData1()) {
+                                    mn.pitch.add(event);
+                                }*/
                             }
                         }
                     } else {
                         //System.out.println("Command:" + sm.getCommand());
                     }
                 } else {
-
+                    //tempo msg
+                    if(message instanceof MetaMessage){
+                        MetaMessage mm= (MetaMessage)message;
+                        if(mm.getType()==0x51){
+                            tempo=mm.getData();
+                        }
+                    }
                 }
 
             }
