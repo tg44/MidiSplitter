@@ -46,6 +46,7 @@ public class Splitter {
             trackNumber++;
             HashMap<String, ArrayList<MidiNote>> trackdata = new HashMap<String, ArrayList<MidiNote>>();
             separatedNotes.put("t" + trackNumber, trackdata);
+            //System.out.println("Track " + trackNumber + ": size = " + track.size());
             for (int i = 0; i < track.size(); i++) {
                 MidiEvent event = track.get(i);
                 //System.out.print("@" + event.getTick() + " ");
@@ -62,7 +63,8 @@ public class Splitter {
                         MidiNote note = new MidiNote();
                         note.setStartMsg(event);
                         channelNoteList.add(note);
-                    } else if (sm.getCommand() == NOTE_OFF || sm.getData2()==0) {
+                        //System.out.println(event.getTick() + " Note on, on ch " + sm.getChannel() + " note: " + sm.getData1()%12 + " " + (sm.getData1()/12-1) + " key=" + sm.getData1() + " velocity: " + sm.getData2());
+                    } else if (sm.getCommand() == NOTE_OFF || (sm.getCommand() == NOTE_ON && sm.getData2()==0)) {
                         //find the startpair
                         for (MidiNote mn : channelNoteList) {
                             if (mn.getEndMsg() == null) {
@@ -72,6 +74,7 @@ public class Splitter {
                                 }
                             }
                         }
+                        //System.out.println(event.getTick() + " Note off, on ch " + sm.getChannel() + " note: " + sm.getData1()%12 + " " + (sm.getData1()/12-1) + " key=" + sm.getData1() + " velocity: " + sm.getData2());
                     }else if (message.getStatus() > 223 && message.getStatus() < 240) {
                         //find the startpair
                         for (MidiNote mn : channelNoteList) {
@@ -84,10 +87,17 @@ public class Splitter {
                                 }*/
                             }
                         }
+                        //System.out.println(event.getTick() + " Note pitch, on ch " + sm.getChannel() + " note: " + sm.getData1()%12 + " " + (sm.getData1()/12-1) + " key=" + sm.getData1() + " velocity: " + sm.getData2());
                     } else {
-                        //System.out.println("Command:" + sm.getCommand());
+                        //System.out.println(event.getTick() + " Command:" + sm.getCommand()+ " data1: "+sm.getData1() + " data2: "+ sm.getData2());
                     }
                 } else {
+                    /*if(message instanceof MetaMessage)
+                    {
+                        System.out.println(event.getTick() + " Meta message: " + Integer.toHexString(((MetaMessage)message).getType()) + ", "+ ((MetaMessage)message).getType() + ", "+new String(((MetaMessage)message).getData()));
+                    } else {
+                        System.out.println(event.getTick() + " Other message: " + message.getClass());
+                    }*/
                     //tempo msg
                     if(message instanceof MetaMessage){
                         MetaMessage mm= (MetaMessage)message;
