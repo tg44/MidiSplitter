@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.prefs.Preferences;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
 import javax.swing.DefaultListModel;
@@ -25,7 +26,7 @@ public class MainForm extends javax.swing.JPanel {
      */
     final JFileChooser fileChooser = new JFileChooser();
     HashMap<String, ConfigPanel> runon = new HashMap<String, ConfigPanel>();
-
+    Preferences prefs = Preferences.userNodeForPackage(MidiSplitter.class);
     public MainForm() {
         //this.setPreferredSize(new Dimension(300, 400));
         initComponents();
@@ -211,10 +212,16 @@ public class MainForm extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ChooseFile(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChooseFile
+        String previouslyLoaded = prefs.get("lastDicPosition", null);
+        if (previouslyLoaded != null) {
+            fileChooser.setCurrentDirectory(new File(previouslyLoaded));
+        }
+        
         fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         int returnVal = fileChooser.showOpenDialog(this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
+            prefs.put("lastDicPosition", fileChooser.getSelectedFile().getPath());
             loadFile(fileChooser.getSelectedFile());
         } else {
             //Cancelled
